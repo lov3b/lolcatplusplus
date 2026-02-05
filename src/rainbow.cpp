@@ -32,11 +32,13 @@
 #include "terminal.hpp"
 
 #include <cmath>
+#include <cstdint>
 #include <format>
 #include <iostream>
 #include <numbers>
 #include <random>
 #include <string>
+#include <sys/types.h>
 #include <thread>
 #include "format.hpp"
 
@@ -69,9 +71,9 @@ class Color {
 public:
     Color(const float freq, const float pos) {
         constexpr float pi = std::numbers::pi_v<float>;
-        r = std::sin(freq * pos) * 127 + 128;
-        g = std::sin(freq * pos + 2 * pi / 3) * 127 + 128;
-        b = std::sin(freq * pos + 4 * pi / 3) * 127 + 128;
+        r = static_cast<uint8_t>(std::sin(freq * pos) * 127 + 128);
+        g = static_cast<uint8_t>(std::sin(freq * pos + 2 * pi / 3) * 127 + 128);
+        b = static_cast<uint8_t>(std::sin(freq * pos + 4 * pi / 3) * 127 + 128);
     }
 
     [[nodiscard]] std::string format(const bool invert, const bool truecolor) const {
@@ -89,7 +91,7 @@ private:
 void Rainbow::print_line(std::string_view line) const {
     int char_index = 0;
     auto get_position = [&]() {
-        float total_position = m_color_offset + m_line_count + char_index;
+        float total_position = static_cast<float>(m_color_offset + m_line_count + char_index);
         return total_position / m_spread;
     };
 
