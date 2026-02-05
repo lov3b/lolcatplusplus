@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.22)
-project(lolcat VERSION 2.1.1)
+project(lolcat VERSION 2.2.0)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
