@@ -1,27 +1,29 @@
 #pragma once
 
-#include <string>
 #include <optional>
+#include <string>
 #include <vector>
 
 
 namespace cli {
-    struct Args {
-        float spread;
-        float freq;
-        float speed;
-        int seed;
-        int duration;
-        bool animate;
-        bool invert;
-        bool truecolor;
-        bool force;
-    };
 
-    struct Input {
-        Args args;
-        std::vector<std::string> files;
-    };
-
-    std::optional<Input> parse_args(int argc, char *argv[]) noexcept;
+struct Options {
+    float spread;
+    float freq;
+    float speed;
+    int seed;
+    int duration;
+    bool animate;
+    bool invert;
+    bool truecolor;
+    bool force;
 };
+
+struct Args {
+    Options args;
+    std::vector<std::string> files;
+};
+
+std::optional<Args> parse_args(int argc, char *argv[]) noexcept;
+
+}; // namespace cli

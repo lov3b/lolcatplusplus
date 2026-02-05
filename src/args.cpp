@@ -40,9 +40,9 @@
 
 namespace po = boost::program_options;
 
-std::optional<cli::Input> cli::parse_args(const int argc, char *argv[]) noexcept {
-    Input input{};
-    Args &args = input.args;
+std::optional<cli::Args> cli::parse_args(const int argc, char *argv[]) noexcept {
+    Args args{};
+    Options &options = args.args;
 
     po::options_description desc("lolcat++ " PROJECT_VERSION "\n"
                                  "\n"
@@ -60,23 +60,23 @@ std::optional<cli::Input> cli::parse_args(const int argc, char *argv[]) noexcept
         desc.add_options()
                 ("help,h", "Show help")
                 ("version,v", "Show version")
-                ("spread,p", po::value<float>(&args.spread)->default_value(3.0f, "3.0"),
+                ("spread,p", po::value<float>(&options.spread)->default_value(3.0f, "3.0"),
                  "Rainbow spread")
-                ("freq,F", po::value<float>(&args.freq)->default_value(0.1f, "0.1"),
+                ("freq,F", po::value<float>(&options.freq)->default_value(0.1f, "0.1"),
                  "Rainbow frequency")
-                ("seed,S", po::value<int>(&args.seed)->default_value(0),
+                ("seed,S", po::value<int>(&options.seed)->default_value(0),
                  "Rainbow seed (0=random)")
-                ("animate,a", po::bool_switch(&args.animate),
+                ("animate,a", po::bool_switch(&options.animate),
                  "Enable animation")
-                ("duration,d", po::value<int>(&args.duration)->default_value(12),
+                ("duration,d", po::value<int>(&options.duration)->default_value(12),
                  "Animation duration")
-                ("speed,s", po::value<float>(&args.speed)->default_value(20.0f, "20.0"),
+                ("speed,s", po::value<float>(&options.speed)->default_value(20.0f, "20.0"),
                  "Animation speed")
-                ("invert,i", po::bool_switch(&args.invert),
+                ("invert,i", po::bool_switch(&options.invert),
                  "Invert colors")
-                ("truecolor,t", po::bool_switch(&args.truecolor),
+                ("truecolor,t", po::bool_switch(&options.truecolor),
                  "Force truecolor mode")
-                ("force,f", po::bool_switch(&args.force),
+                ("force,f", po::bool_switch(&options.force),
                  "Force color output")
                 ("files", po::value<std::vector<std::string> >(),
                  "Input files (also positional)");
@@ -92,8 +92,8 @@ std::optional<cli::Input> cli::parse_args(const int argc, char *argv[]) noexcept
         // We don't want to colorize the output here in automated testing
         // or make it hard for other programs.
         auto show_info = [&](std::stringstream &ss) {
-            if (args.force || term::is_tty(stdout)) {
-                Rainbow rainbow(args);
+            if (options.force || term::is_tty(stdout)) {
+                Rainbow rainbow(options);
                 rainbow.process(ss);
             } else {
                 std::cout << ss.str();
@@ -113,11 +113,11 @@ std::optional<cli::Input> cli::parse_args(const int argc, char *argv[]) noexcept
             show_info(ss);
             return std::nullopt;
         }
-        input.files = vm.contains("files") ? vm["files"].as<std::vector<std::string>>() : std::vector<std::string>{"-"};
+        args.files = vm.contains("files") ? vm["files"].as<std::vector<std::string>>() : std::vector<std::string>{"-"};
     } catch (const std::exception &e) {
         std::cerr << "Error: " << e.what() << "\n";
         return std::nullopt;
     }
 
-    return {input};
+    return {args};
 }

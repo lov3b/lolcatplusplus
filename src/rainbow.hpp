@@ -7,7 +7,7 @@
 
 class Rainbow {
 public:
-    explicit Rainbow(const cli::Args &args);
+    explicit Rainbow(const cli::Options &options);
 
     void process(std::istream &in);
 

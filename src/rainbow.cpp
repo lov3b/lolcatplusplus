@@ -50,10 +50,11 @@ static bool is_truecolor() {
     return colorterm && (std::strstr(colorterm, "truecolor") || std::strstr(colorterm, "24bit"));
 }
 
-Rainbow::Rainbow(const cli::Args &args) :
-    m_spread(args.spread), m_speed(args.speed), m_freq(args.freq), m_duration(args.duration),
-    m_color_offset(args.seed ? args.seed : static_cast<int>(std::random_device{}() % 256)), m_invert(args.invert),
-    m_animate(args.animate), m_truecolor_mode(args.truecolor || is_truecolor()), m_force_term(args.force) {}
+Rainbow::Rainbow(const cli::Options &options) :
+    m_spread(options.spread), m_speed(options.speed), m_freq(options.freq), m_duration(options.duration),
+    m_color_offset(options.seed ? options.seed : static_cast<int>(std::random_device{}() % 256)),
+    m_invert(options.invert), m_animate(options.animate), m_truecolor_mode(options.truecolor || is_truecolor()),
+    m_force_term(options.force) {}
 
 void Rainbow::process(std::istream &in) {
     if (m_animate && is_tty())
