@@ -79,3 +79,61 @@ jobs:
         with:
           files: artifacts/*
           generate_release_notes: true
+
+  update-homebrew:
+    name: Update Homebrew Tap
+    needs: release
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Get Release Info
+        id: info
+        run: |
+          # Strip the 'v' prefix
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+          echo "SOURCE_URL=https://github.com/${{ github.repository }}/archive/refs/tags/v${VERSION}.tar.gz" >> $GITHUB_OUTPUT
+          echo "BINARY_URL=https://github.com/${{ github.repository }}/releases/download/v${VERSION}/lolcat-macos-arm64" >> $GITHUB_OUTPUT
+
+      - name: Calculate Hashes
+        id: shas
+        run: |
+          SOURCE_SHA=$(curl -sL ${{ steps.info.outputs.SOURCE_URL }} | shasum -a 256 | cut -d ' ' -f 1)
+          BINARY_SHA=$(curl -sL ${{ steps.info.outputs.BINARY_URL }} | shasum -a 256 | cut -d ' ' -f 1)
+          echo "SOURCE_SHA=$SOURCE_SHA" >> $GITHUB_OUTPUT
+          echo "BINARY_SHA=$BINARY_SHA" >> $GITHUB_OUTPUT
+
+      - name: Checkout Tap Repo
+        uses: actions/checkout@v4
+        with:
+          repository: lolcatpp/homebrew-tap
+          token: ${{ secrets.TAP_GITHUB_TOKEN }}
+          path: tap
+
+      - name: Update Formula
+        run: |
+          cd tap/Formula
+          FORMULA_FILE="lolcatpp.rb"
+
+          # Update source resources
+          sed -i "s|url \".*\" # source_url_marker|url \"${{ steps.info.outputs.SOURCE_URL }}\" # source_url_marker|" $FORMULA_FILE
+          sed -i "s/sha256 \".*\" # source_sha_marker/sha256 \"${{ steps.shas.outputs.SOURCE_SHA }}\" # source_sha_marker/" $FORMULA_FILE
+
+          # Update binary resources
+          sed -i "s|url \".*\" # binary_url_marker|url \"${{ steps.info.outputs.BINARY_URL }}\" # binary_url_marker|" $FORMULA_FILE
+          sed -i "s/sha256 \".*\" # binary_sha_marker/sha256 \"${{ steps.shas.outputs.BINARY_SHA }}\" # binary_sha_marker/" $FORMULA_FILE
+
+          # Debug
+          cat $FORMULA_FILE
+
+      - name: Commit and Push
+        run: |
+          cd tap
+          git config user.name "Love Billenius"
+          git config user.email "lovebillenius@disroot.org"
+          git add .
+          git commit -m "Update formula to v${{ steps.info.outputs.VERSION }}"
+          git push
