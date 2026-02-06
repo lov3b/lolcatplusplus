@@ -38,7 +38,7 @@ file(GLOB_RECURSE SOURCES "${PROJECT_SOURCE_DIR}/src/*.cpp")
 
 add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
 
-target_link_libraries(${CMAKE_PROJECT_NAME} LINK_PUBLIC ${Boost_LIBRARIES})
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE Boost::program_options Boost::locale Boost::iostreams)
 if(NOT HAS_FORMAT)
     target_compile_definitions(${PROJECT_NAME} PRIVATE USE_LIBFMT)
     target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)
