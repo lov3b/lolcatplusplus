@@ -30,7 +30,7 @@ jobs:
 
           - os: windows-latest
             asset_name: lolcat-windows-amd64.exe
-            install: vcpkg install boost-program-options:x64-windows-static boost-locale:x64-windows-static boost-iostreams:x64-windows-static
+            install: vcpkg install boost-program-options:x64-windows-static
             cmake_args: "-DVCPKG_TARGET_TRIPLET=x64-windows-static -DCMAKE_TOOLCHAIN_FILE=C:/vcpkg/scripts/buildsystems/vcpkg.cmake"
 
     steps:
