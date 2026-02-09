@@ -4,13 +4,18 @@
 
 # Lolcat++
 
-[![blazingly fast](https://www.blazingly.fast/api/badge.svg?repo=lolcatpp%2Flolcatpp)](https://www.blazingly.fast)
+[![Blazingly fast](https://www.blazingly.fast/api/badge.svg?repo=lolcatpp%2Flolcatpp)]()
+[![GitHub License](https://img.shields.io/github/license/lolcatpp/lolcatpp?logo=opensourceinitiative&logoColor=white)](/LICENSE)
+[![GitHub top language](https://img.shields.io/github/languages/top/lolcatpp/lolcatpp?logo=cplusplus)]()
+[![Build Status](https://img.shields.io/github/actions/workflow/status/lolcatpp/lolcatpp/release.yml?logo=CMake)](https://github.com/lolcatpp/lolcatpp/actions)
+[![GitHub Release](https://img.shields.io/github/v/release/lolcatpp/lolcatpp?logo=github&logoColor=white)](https://github.com/lolcatpp/lolcatpp/releases/latest)
+[![AUR Version](https://img.shields.io/aur/version/lolcat%2B%2B?logo=archlinux&logoColor=white)](https://aur.archlinux.org/packages/lolcat++)
 
 A rewrite of the popular utility [_LOLCAT_](https://github.com/busyloop/lolcat) in C++.
 The rationale is that lolcat is often used in init scripts and such.
 It can at times be rather time-consuming to run it, since it's written in Ruby.
 Now it's -- naturally -- _BLAZINGLY FAST_ in C++.
-I'ts also cross-platform.
+It's also cross-platform.
 
 ## Example usage
 
@@ -41,7 +46,7 @@ Here's some copy-paste scripts for your platform:
 
 ### Arch Linux: AUR
 
-Use your prefered aur-helper and choose whether to compile from source, or to just grab the
+Use your prefered AUR helper and choose whether to compile from source, or to just grab the
 binary that the CI produces. This aur-package is updated automatically in the CI/CD.
 
 **From source:**
@@ -84,7 +89,7 @@ brew install lolcatpp
 ### macOS: from releases, only Apple Silicon
 
 Grab the latest release from the releases with the following command.
-Unfortunatly it's a pain in the ass to compile to _x86_64_ for macOS on Github-Actions.
+Unfortunately it's a pain in the ass to compile to _x86_64_ for macOS on Github-Actions.
 We recommend that you use either the _homebrew-tap_ or compile manually from source.
 
 ```bash
@@ -97,7 +102,7 @@ sudo mv -v /tmp/lolcat /usr/local/bin/lolcat
 
 ### Windows: from releases (Administrator PowerShell)
 
-Grab the latest release from the releases, and update the `$PATH` vairable, with the following command.
+Grab the latest release from the releases, and update the `$PATH` variable, with the following command.
 
 ```powershell
 Invoke-WebRequest `
