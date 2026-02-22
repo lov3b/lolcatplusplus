@@ -23,6 +23,13 @@ $tempFile = Join-Path $env:TEMP "lolcat.exe"
 Write-Host ">> Downloading lolcat++ ($assetName)..."
 Invoke-WebRequest -Uri $url -OutFile $tempFile
 
+$firstLine = Get-Content -Path $tempFile -TotalCount 1 -ErrorAction SilentlyContinue
+if ($firstLine -match "<!DOCTYPE html>") {
+    Write-Host ">> Error: Download failed. Your network or firewall (probably) intercepted the download and returned an HTML page." -ForegroundColor Red
+    Remove-Item -Path $tempFile -Force
+    exit
+}
+
 $installDir = "C:\Program Files\lolcat++"
 Write-Host ">> Installing to $installDir..."
 if (-not (Test-Path $installDir)) {

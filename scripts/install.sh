@@ -46,7 +46,15 @@ fi
 
 echo ">> Downloading lolcat++ ($ASSET_NAME)..."
 TEMP_FILE=$(mktemp)
-curl -L "https://github.com/lolcatpp/lolcatpp/releases/latest/download/$ASSET_NAME" -o "$TEMP_FILE"
+curl --fail --show-error --location \
+    "https://github.com/lolcatpp/lolcatpp/releases/latest/download/$ASSET_NAME" \
+    -o "$TEMP_FILE"
+
+if head -n 1 "$TEMP_FILE" | grep -qi "<!DOCTYPE html>"; then
+    echo ">> Error: Download failed. Your network or firewall (probably) intercepted the download and returned an HTML page."
+    rm "$TEMP_FILE"
+    exit 1
+fi
 
 chmod +x "$TEMP_FILE"
 
